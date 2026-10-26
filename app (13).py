@@ -10,20 +10,36 @@ st.markdown("Filter by commodity, material, and other criteria to find the requi
 # Load data
 @st.cache_data
 def load_data():
-    base = "/workspace/artifacts"
-    headers = pd.read_excel(os.path.join(base, "Amplats_Headers_All_Specs.xlsx"))
-    # Load other sheets if needed
-    try:
-        valves = pd.read_excel(os.path.join(base, "All_Specs_Valves_Complete.xlsx"))
-    except:
-        valves = pd.DataFrame()
-    try:
-        pipes = pd.read_excel(os.path.join(base, "Amplats_Pipes_Expanded.xlsx"))
-    except:
-        pipes = pd.DataFrame()
-    return headers, valves, pipes
+    base = os.path.dirname(os.path.abspath(__file__))
+    
+    # User's file names
+    headers_path = os.path.join(base, "Headers.xlsx")
+    fittings_path = os.path.join(base, "Fittings.xlsx")
+    piping_path = os.path.join(base, "Piping.xlsx")
+    bends_path = os.path.join(base, "Bends.xlsx")
+    joints_path = os.path.join(base, "Joints.xlsx")
+    bolting_path = os.path.join(base, "Bolting.xlsx")
+    gaskets_path = os.path.join(base, "Gaskets.xlsx")
+    valves_path = os.path.join(base, "Equipment & Valve.xlsx")
+    
+    if not os.path.exists(headers_path):
+        st.error("Data file not found: Headers.xlsx\n\nPlease place the Excel files in the same folder as app.py.")
+        st.stop()
+    
+    headers = pd.read_excel(headers_path)
+    
+    # Load others if they exist
+    fittings = pd.read_excel(fittings_path) if os.path.exists(fittings_path) else pd.DataFrame()
+    piping = pd.read_excel(piping_path) if os.path.exists(piping_path) else pd.DataFrame()
+    bends = pd.read_excel(bends_path) if os.path.exists(bends_path) else pd.DataFrame()
+    joints = pd.read_excel(joints_path) if os.path.exists(joints_path) else pd.DataFrame()
+    bolting = pd.read_excel(bolting_path) if os.path.exists(bolting_path) else pd.DataFrame()
+    gaskets = pd.read_excel(gaskets_path) if os.path.exists(gaskets_path) else pd.DataFrame()
+    valves = pd.read_excel(valves_path) if os.path.exists(valves_path) else pd.DataFrame()
+    
+    return headers, fittings, piping, bends, joints, bolting, gaskets, valves
 
-headers, valves, pipes = load_data()
+headers, fittings, piping, bends, joints, bolting, gaskets, valves = load_data()
 
 # Sidebar filters
 st.sidebar.header("Filters")
